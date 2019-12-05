@@ -81,11 +81,20 @@ server.put("/cards/:id", checkCard, (req, res) => {
 //deletar card - :id é o parametro (numero do card) que quero deletar
 server.delete("/cards/:id", checkCard, (req, res) => {
 
-    
+
     // return res.json("NADA");
-    const {id} = req.body;
-    const card = cards.find(card => card.id == id);  //buscar card
-    // cards.splice(card, id);  // exclui o card numero X
+    const {id} = req.params;
+
+    // function teste(item){
+    //     console.log(item.id);
+    //     console.log(id);
+    // }
+
+    //Encontra a posição no array
+    // const card = cards.find(card => card.id == id);  //buscar card
+
+    const card = cards.findIndex(card => card.id == id);  //buscar card
+    cards.splice(findIndex, 1);  // exclui o card numero X
     // cards.remove();
     return res.json(cards);
 
