@@ -1,0 +1,17 @@
+{
+  "name": "simpleNodeApiCards",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/gabfinsoa/simpleNodeApiCards.git",
+  "author": "gabfinsoa <gabfinsoa@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
