@@ -1,109 +1,104 @@
 
-//chamar lib express
 const express = require('express');
 
-//servidor que vai ser aplicação express
 const server = express();
 
-//informar a utilização de arquivo Json
 server.use(express.json());
 
-//toda a rota ira ter um request, uma resposta
-//midleware
-server.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin','*'); //só necessário por estar rodando local, senão não precisa
-    next();  //seguir
+//Middleware
+server.use((req,res,next) => {
+    res.header('Access-Control-Allow-Origin','*');
+    next();
 });
 
-function checkCard(req, res, next) {
-    const {id} = req.params; //pegar do req
-    const card = cards.find(card => card.id == id);  //buscar card
+//Middleware
+function checkCard(req,res,next){
+    const {id} = req.params;
+    // Encontrando um CARD no array
+    const card = cards.find(procuraCard => procuraCard.id == id);
+
+    //Verifica se o card existe, caso contrario exibe mensagem e encerra
     if(!card){
-        return res.json({error: "Card not found!"}); //caso não encontre o card a aplicação para aqui
+        return res.json({error: "Card not found."});
     }
-    next(); //seguir
-};
+
+    next();
+}
 
 //criar 2 variaveis por não haver banco de dados
 let nextId = 1;
-const cards = [] //array
+const cards = [] //array de cards (objetos)
 
-//criando uma rota e retornando o GET com este objeto
-server.get("/", (req, res) => {
+server.get('/',(req,res) => {
     return res.json({result: "API-SCRAPBOOK"});
 });
 
-//rota get que devolve os cards
-server.get("/cards", (req, res) =>{
-    return res.json(cards);   // localhost:3333/cards
+server.get("/cards", (req,res) => {
+    return res.json(cards);
 });
 
-//rota POST para cadastrar os cards
+//req pega as coisas que o cliente envia
 server.post("/cards", (req, res) => {
+    // A requisicao pega no <body> os campos TITLE e CONTENT
     const {title, content} = req.body;
-
-    //controlar o ID
+    
+    // Controlar o ID na aplicacao. CARD é um objeto
     const card = {
         id: nextId,
         title,
         content
     };
+
+    // Adicionar cada card no array de CARDS
     cards.push(card);
 
-    //Incrementa o ID
+    // Incrementar o ID
     nextId++;
 
     return res.json(card);
 });
 
-//rota para update (atualizar)
+//Recebe o ID como 1 parâmetro e o MIDDLEWARE como 2 parametro
 server.put("/cards/:id", checkCard, (req, res) => {
-    //mandar o ID que é para editar
-    
+    //Pegar do REQ o ID
+    const {id} = req.params; 
 
-    const {title, content} = req.body; //pegar e editar as variaveis
-    const card = cards.find(card => card.id == id);  //buscar card
-    
+    //Pegar do BODY as variaveis TITLE e CONTENT para editar
+    const {title, content} = req.body;
+
+    // Encontrando um CARD no array
+    const card = cards.find(procuraCard => procuraCard.id == id);
 
     
-
+    //Verificar se contem valor no TITLE
     if(title){
-        card.title = title; //se o card existir add o title no card
+        //Caso o valor exista, add o novo titulo (via postman)
+        card.title = title;
     }
-
+    //Verificar se contem valor no CONTENT
     if(content){
-        card.content = content; //se o conteudo existir add o conteudo no card
+        //Caso o valor exista, add o novo conteudo (via postman)
+        card.content = content;
     }
 
-    return res.json(card); 
+    return res.json(card);
 });
 
-//deletar card - :id é o parametro (numero do card) que quero deletar
+//Recebe o ID por parâmetro
 server.delete("/cards/:id", checkCard, (req, res) => {
 
+    const{id} = req.params;
 
-    // return res.json("NADA");
-    const {id} = req.params;
+    const cardIndex = cards.findIndex(card => card.id = id);
 
-    // function teste(item){
-    //     console.log(item.id);
-    //     console.log(id);
-    // }
+    cards.splice(cardIndex,1);
 
-    //Encontra a posição no array
-    // const card = cards.find(card => card.id == id);  //buscar card
-
-    const card = cards.findIndex(card => card.id == id);  //buscar card
-    cards.splice(findIndex, 1);  // exclui o card numero X
-    // cards.remove();
     return res.json(cards);
-
-
 });
 
-//ouvindo a rota do servidor
-server.listen(3333);  //rodar YARN DEV e abrir o LOCALHOST:3333 para ver o resultado
 
+//Porta utilizada
+server.listen(3333);
 
 
 
