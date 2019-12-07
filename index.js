@@ -91,7 +91,7 @@ server.delete("/cards/:id", checkCard, (req, res) => {
 
     const{id} = req.params;
 
-    const cardIndex = cards.findIndex(card => card.id = id);
+    const cardIndex = cards.findIndex(card => card.id == id);
 
     cards.splice(cardIndex,1);
 
