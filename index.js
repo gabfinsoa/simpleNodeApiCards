@@ -34,6 +34,7 @@ function checkCard(req,res,next){
 let nextId = 1;
 const cards = [] //array de cards (objetos)
 
+//ROUTES
 server.get('/',(req,res) => {
     return res.json({result: "API-SCRAPBOOK"});
 });
@@ -103,7 +104,7 @@ server.delete("/cards/:id", checkCard, (req, res) => {
 
 
 //Porta utilizada
-server.listen(3333);
+// server.listen(3333);
 server.listen(process.env.PORT);
 
 
