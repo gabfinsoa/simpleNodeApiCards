@@ -1,5 +1,9 @@
 
 const express = require('express');
+
+//importar o banco de dados
+const database = require('./database');
+
 // const dotenv = require('dotenv');
 require('dotenv').config();
 
@@ -12,7 +16,7 @@ server.use((req,res,next) => {
     res.header('Access-Control-Allow-Origin','*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
-    console.log(process.env.TESTE);
+    //console.log(process.env.TESTE);
     next();
 });
 
@@ -30,16 +34,35 @@ function checkCard(req,res,next){
     next();
 }
 
+//Criar middleware para ver qual é o ultimo ID
+function lastId(req,res,next){
+database.query(`SELECT MAX(id) FROM cards`, {type: database.QueryTypes.SELECT})
+    .then(results => {
+        console.log("results");
+        
+    })
+    next();
+}
+
 //criar 2 variaveis por não haver banco de dados
 let nextId = 1;
-const cards = [] //array de cards (objetos)
+let cards = [] //array de cards (objetos)
 
 //ROUTES
 server.get('/',(req,res) => {
+    
     return res.json({result: "API-SCRAPBOOK"});
 });
 
-server.get("/cards", (req,res) => {
+server.get("/cards", lastId, (req,res) => {
+    //conectar a banco e fazer o select. E qual o tipo de resposta que quero ao executar o comando (select)
+    database.query(`SELECT * FROM cards`, {type: database.QueryTypes.SELECT})
+    .then(results => {
+        console.log("results");
+        cards = results;
+        console.log(cards);
+    })
+
     return res.json(cards);
 });
 
