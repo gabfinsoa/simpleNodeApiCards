@@ -40,7 +40,7 @@ async function getNextId(req, res, next){
     //Query para pegar o maior ID
     await database.query(`SELECT MAX(id) FROM cards`, { type: database.QueryTypes.SELECT })
     .then(id => {
-        console.log(results);
+        console.log(id);
         
         //Atribuir o resultado da query MAX para o NextID
         nextId = id[0].max;
